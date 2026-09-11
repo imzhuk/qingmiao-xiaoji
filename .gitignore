@@ -1,0 +1,13 @@
+# 编辑器与本地工具（不上传到网站）
+editor/
+_verify.js
+
+# 本地备份文件
+content.json.bak
+index.html.bak
+
+# 系统及驱动杂项
+NVIDIA Corporation/
+Thumbs.db
+desktop.ini
+.DS_Store

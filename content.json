@@ -1,0 +1,194 @@
+{
+  "site": {
+    "pageTitle": "青苗小记 · 蜡笔画相册",
+    "headerTag": "蜡笔画",
+    "headerTitle": "青苗小记",
+    "footerHint": "拖动或用方向键翻页"
+  },
+  "cover": {
+    "title": "青苗小记",
+    "subtitle": "二〇二六 八月"
+  },
+  "epigraph": "把日子画下来，就不怕忘。",
+  "colophon": {
+    "lines": [
+      "青苗小记",
+      "一本全是画的相册\n二〇二六 八月"
+    ]
+  },
+  "backCover": {
+    "mark": "青苗小记"
+  },
+  "pages": [
+    {
+      "type": "chapter",
+      "no": "第一章",
+      "title": "合照",
+      "text": "三个人，一张合影，画了三次。脸上的彩绘还没洗掉，头发被揉得一团乱，谁都在笑。"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/hezhao1.png",
+      "alt": "三个小孩的扁平风插画：绿龙、蓝鲸和小恐龙彩绘",
+      "caption": "合照 · 吉卜力",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/hezhao2.png",
+      "alt": "同一张合照的蜡笔涂鸦版，线条奔放颜色浓烈",
+      "caption": "合照 · 蜡笔版",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/hezhao3.jpg",
+      "alt": "同一张合照的立体渲染版，三个人物更写实",
+      "caption": "合照 · 皮克斯",
+      "size": "large"
+    },
+    {
+      "type": "chapter",
+      "no": "第二章",
+      "title": "蓝花楹",
+      "text": "一个恐龙外壳，一个外星人合照，还有实在找不到照片随便放的蓝花楹。"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/lanhua1.png",
+      "alt": "穿机器人纸箱装备的小孩，头顶挂着彩灯，旁边是书架",
+      "caption": "挤不下的恐龙外壳",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/lanhua2.jpg",
+      "alt": "穿粉色 GAP 连帽衫的人站在木门边",
+      "caption": "凑数照片",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/lanhua3.jpg",
+      "alt": "砖墙前，一个涂满彩虹颜色的人偶旁边，黑衣小孩在比耶",
+      "caption": "与外星人合照",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/xiaohuahua.jpg",
+      "alt": "一幅小孩画：红色双马尾、粉色裙子、头戴小兔子发卡的女孩",
+      "caption": "一个爱吃蛋糕的小朋友画的",
+      "size": "medium"
+    },
+    {
+      "type": "chapter",
+      "no": "第三章",
+      "title": "张起灵",
+      "text": "照顾人，薯片鸭子，抢小朋友木马的张起灵，一包纸，还有一本《只有春天和爱允许入内》。"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zql1.png",
+      "alt": "坐在扶手椅上的女孩举着手机比耶",
+      "caption": "不爱唱歌爱照顾人",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zql2.png",
+      "alt": "吹着黄色泡泡糖的女孩敬礼，脸上画着彩色小花",
+      "caption": "恐龙谷的薯片鸭子",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zql3.png",
+      "alt": "女孩坐在黄色小鸭弹簧摇摇乐上挥手",
+      "caption": "抢小朋友的木马",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zql-paper.jpg",
+      "alt": "一张纸上的涂鸦：蓝色波浪、黄色小星星和一只露出纸角的盒子",
+      "caption": "吃起来甜甜的纸",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zql-gift.png",
+      "alt": "手绘书封《只有春天和爱允许入内》，紫色封面，黄沙发上一只绿猫",
+      "caption": "《只有春天和爱允许入内》",
+      "size": "large"
+    },
+    {
+      "type": "chapter",
+      "no": "第四章",
+      "title": "章章",
+      "text": "蓝色角龙，卡点过生日，在亭子下傻笑的章章。"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zz1.png",
+      "alt": "眼角画着蓝色花朵彩绘的女孩在太阳下挥手",
+      "caption": "蓝色角龙",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zz2.png",
+      "alt": "戴眼镜的人捧着插有一支蜡烛的巧克力蛋糕",
+      "caption": "蜡烛先点，愿望后说",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zz3.png",
+      "alt": "生日餐桌前，戴眼镜的人举着 Hello Kitty 纸袋",
+      "caption": "桌上的食物，怀里的礼物",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zz4.png",
+      "alt": "亭子下长发的戴眼镜女孩回头大笑",
+      "caption": "亭子下傻笑",
+      "size": "portrait"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/zz-gift.png",
+      "alt": "蓝色夜色里的酒吧，七个人举着啤酒杯，落款 08.01.2026",
+      "caption": "二〇二六年八月一日，开心",
+      "size": "large"
+    },
+    {
+      "type": "chapter",
+      "no": "第五章",
+      "title": "乔治",
+      "text": "乔治的一天：晒太阳，喝饮料，打瞌睡。"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/qiaozhi1.png",
+      "alt": "阳光下鼓着腮帮子的人，背景是蓝天绿树",
+      "caption": "依旧薯片鸭子",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/qiaozhi2.png",
+      "alt": "背红色双肩包的人插着吸管喝饮料，身后是街道与行人",
+      "caption": "偷吃小朋友零食",
+      "size": "large"
+    },
+    {
+      "type": "photo",
+      "src": "assets/photos/qiaozhi3.png",
+      "alt": "一头黑发的人趴在手臂上睡着",
+      "caption": "永远睡不醒",
+      "size": "large"
+    }
+  ]
+}

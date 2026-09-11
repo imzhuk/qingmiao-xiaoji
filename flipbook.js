@@ -101,3 +101,10 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Home") pageFlip.turnToPage(0);
   if (event.key === "End") pageFlip.turnToPage(pageFlip.getPageCount() - 1);
 });
+
+// 暴露给本地可视化编辑器用于联动翻页（对网站本身没有任何影响）
+window.__qingmiaoBook = {
+  turnTo: (page) => pageFlip.turnToPage(page),
+  getPageCount: () => pageFlip.getPageCount(),
+  current: () => currentPage,
+};
