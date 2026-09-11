@@ -145,7 +145,7 @@ function buildHtml(content) {
 <body>
 <main class="room">
   <header class="book-header">
-    <span>${text(site.headerTag)}</span><h1>${text(site.headerTitle)}</h1><span id="orientation">打开跨页</span>
+    <span>${text(site.headerTag)}</span><h1>${text(site.headerTitle)}</h1>
   </header>
   <section class="stage" aria-label="Interactive photo book">
     <div class="book-rig">

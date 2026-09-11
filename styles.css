@@ -2,17 +2,20 @@
 :root { --page-ratio: .8; color: var(--ink); background: #fff; font-family: var(--book-serif); font-synthesis: none; }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
-body { overflow: hidden; background: #fff; }
+html { -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
+body { overflow: hidden; background: #fff; -webkit-tap-highlight-color: transparent; }
 button { color: inherit; font: inherit; }
 .room { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100dvh; padding: 22px 24px 20px; }
-.book-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; width: min(100%, 1100px); margin: auto; }
-.book-header h1 { margin: 0; font: 400 16px/1.3 var(--book-serif); letter-spacing: -.01em; }
+.book-header { position: relative; display: flex; align-items: center; justify-content: center; gap: 20px; width: min(100%, 1100px); margin: auto; }
+.book-header h1 { margin: 0; font: 400 16px/1.3 var(--book-serif); letter-spacing: -.01em; text-align: center; }
 .book-header a, .book-header span { font: 400 10px/1.4 var(--book-sans); color: #6e7365; text-decoration: none; }
-.book-header span:last-child { text-align: right; }
+.book-header > span:first-child { position: absolute; left: 0; top: 50%; translate: 0 -50%; }
 .stage { position: relative; display: grid; place-items: center; min-height: 0; padding: 16px 0; }
 /* PageFlip derives leaf height from width. Reserve room for navigation. */
 .book-rig { display: grid; place-items: center; width: min(100%, calc((100dvh - 140px) * var(--page-ratio) * 2), calc(640px * var(--page-ratio) * 2)); height: min(calc(100dvh - 140px), 640px); }
-.book { position: relative; isolation: isolate; filter: drop-shadow(0 9px 12px rgb(29 37 21 / 15%)); transition: translate 760ms ease; }
+.book { position: relative; isolation: isolate; filter: drop-shadow(0 9px 12px rgb(29 37 21 / 15%)); transition: translate 760ms ease; will-change: transform; }
+/* 手机上没有鼠标悬停，翻页手势交给翻页库处理，避免误触发页面滚动/下拉刷新 */
+#book.stf__parent { touch-action: none; }
 .book[data-layout="landscape"][data-edge="front"] { translate: -25% 0; }
 .book[data-layout="landscape"][data-edge="back"] { translate: 25% 0; }
 .book-page { position: relative; overflow: hidden; background: var(--paper); }
@@ -26,6 +29,15 @@ button { color: inherit; font: inherit; }
 .status span { font: 400 10px/1.4 var(--book-sans); letter-spacing: .04em; color: #666e5d; }
 .status small { font: 400 9px/1.4 var(--book-sans); color: #969b8f; }
 a:focus-visible, button:focus-visible { outline: 2px solid #6b735d; outline-offset: 4px; }
-@media (max-width: 700px) { .room { padding: 16px 9px; } .book-header { grid-template-columns: 1fr auto; } .book-header h1 { font-size: 13px; } .book-header #orientation { display: none; } }
+@media (max-width: 700px) { .room { padding: 10px 6px 8px; } .book-header { justify-content: center; } .book-header h1 { font-size: 13px; } .book-header > span:first-child { font-size: 9px; } .stage { padding: 6px 0; } .book-rig { height: min(calc(100dvh - 118px), 640px); } .controls { grid-template-columns: 34px 1fr 34px; gap: 12px; width: min(100%, 232px); } .controls button { width: 34px; height: 34px; } .book { filter: drop-shadow(0 3px 6px rgb(29 37 21 / 13%)); transition-duration: 460ms; } }
 @media (prefers-reduced-motion: reduce) { .book { transition: none; } }
 @media print { body { overflow: visible; } .book-header, .controls { display: none; } }
+
+/*
+ * 触屏设备：页面的滤镜阴影也调轻。
+ * drop-shadow 在手机上每帧都要重绘模糊层，是翻页卡顿的主要来源；
+ * 桌面端保持原有的立体阴影不变。
+ */
+@media (hover: none) and (pointer: coarse) {
+  .book { filter: drop-shadow(0 3px 6px rgb(29 37 21 / 13%)); transition-duration: 460ms; }
+}

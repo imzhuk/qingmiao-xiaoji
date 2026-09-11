@@ -1,43 +1,76 @@
 @font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-Regular.otf.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-It.otf.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
 :root{--paper:#f7f6f0;--ink:#292c26;--cloth:#7d8572;--book-serif:"Source Serif 4","KaiTi","STKaiti","Songti SC","Noto Serif CJK SC","SimSun",Georgia,serif;--book-sans:Arial,Helvetica,sans-serif}
-.art-page .plate.has-caption{flex-direction:column;justify-content:center;gap:2cqw}
-.art-page .plate.has-caption img{width:auto;height:auto;max-width:100%;max-height:84%;object-fit:contain}
-.art-page .plate-caption{margin:0;font:400 1.8cqw/1.5 var(--book-serif);color:#73766c;text-align:center}
-.art-page .chapter-block{position:absolute;left:16%;right:14%;top:28%}
-.art-page .chapter-block .chapter-no{margin:0 0 3.5cqw;font:400 2cqw/1 var(--book-serif);letter-spacing:.4em;color:#73766c}
-.art-page .chapter-block h2{margin:0 0 4.5cqw;font:400 6cqw/1.2 var(--book-serif);letter-spacing:-.01em}
-.art-page .chapter-block p{margin:0;font:400 2.1cqw/1.8 var(--book-serif);color:#4a4d45}
-.art-page .epigraph{position:absolute;left:20%;right:18%;top:38%;margin:0;font:400 2.5cqw/1.9 var(--book-serif);color:#4a4d45}
-.art-page .epigraph small{display:block;margin-top:5cqw;font-size:1.7cqw;color:#73766c}
+.art-page .plate.has-caption{flex-direction:column;justify-content:center;gap:1.6cqw}
+.art-page .plate.has-caption img{width:auto;height:auto;max-width:100%;max-height:88%;object-fit:contain}
+.art-page .plate-caption{margin:0;font:400 2.2cqw/1.5 var(--book-serif);color:#73766c;text-align:center}
+.art-page .chapter-block{position:absolute;left:14%;right:12%;top:26%}
+.art-page .chapter-block .chapter-no{margin:0 0 3cqw;font:400 2.2cqw/1 var(--book-serif);letter-spacing:.4em;color:#73766c}
+.art-page .chapter-block h2{margin:0 0 4cqw;font:400 7cqw/1.2 var(--book-serif);letter-spacing:-.01em}
+.art-page .chapter-block p{margin:0;font:400 2.5cqw/1.8 var(--book-serif);color:#4a4d45}
+.art-page .epigraph{position:absolute;left:16%;right:15%;top:35%;margin:0;font:400 3cqw/1.85 var(--book-serif);color:#4a4d45}
+.art-page .epigraph small{display:block;margin-top:5cqw;font-size:2cqw;color:#73766c}
 .art-page{container-type:inline-size;position:relative;aspect-ratio:var(--page-ratio, .8);overflow:hidden;background:var(--paper) url("paper-grain.svg") repeat;color:var(--ink);font-family:var(--book-serif);font-weight:400}
 .art-page img{display:block;object-fit:contain;filter:none;border:0;border-radius:0;box-shadow:none}
-.art-page .plate{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:74%;height:72%;margin:0;display:flex;align-items:center;justify-content:center}
+.art-page .plate{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:80%;height:78%;margin:0;display:flex;align-items:center;justify-content:center}
 .art-page .plate img{width:100%;height:100%;object-fit:contain}
-.art-page .plate.small{width:49%;height:53%}
-.art-page .plate.medium{width:68%;height:65%}
-.art-page .plate.large{width:86%;height:82%}
-.art-page .plate.portrait{width:67%;height:66%}
+.art-page .plate.small{width:56%;height:60%}
+.art-page .plate.medium{width:74%;height:71%}
+.art-page .plate.large{width:92%;height:88%}
+.art-page .plate.portrait{width:74%;height:73%}
 .art-page .plate.high{top:40%}
 .art-page .plate.low{top:55%}
 .art-page .plate.aside{left:55%}
-.art-page .folio{position:absolute;bottom:4.7%;right:7.7%;margin:0;color:#73766c;font:400 1.5cqw/1 var(--book-serif);letter-spacing:0;text-transform:none}
+.art-page .folio{position:absolute;bottom:4.7%;right:7.7%;margin:0;color:#73766c;font:400 1.8cqw/1 var(--book-serif);letter-spacing:0;text-transform:none}
 .art-page.verso .folio{left:7.7%;right:auto}
 .art-page.endpaper{background-color:#e9e9dc}
 .art-page.cloth{background:var(--cloth) url("cloth-weave.svg") repeat;color:#f2efdf}
-.art-page .cover-title{position:absolute;left:13.5%;right:10%;top:15%;margin:0;font:400 7.2cqw/1.12 var(--book-serif);letter-spacing:-.02em;text-shadow:0 1px 0 rgb(29 39 25 / 12%)}
-.art-page .cover-subtitle{position:absolute;left:13.5%;top:33%;font:400 2.1cqw/1.4 var(--book-serif);margin:0;letter-spacing:.025em}
-.art-page .cover-plate{position:absolute;left:13.5%;bottom:18%;width:52%;margin:0;box-shadow:0 1px 1px rgb(24 33 20 / 18%)}
+.art-page .cover-title{position:absolute;left:13.5%;right:10%;top:15%;margin:0;font:400 8cqw/1.12 var(--book-serif);letter-spacing:-.02em;text-shadow:0 1px 0 rgb(29 39 25 / 12%)}
+.art-page .cover-subtitle{position:absolute;left:13.5%;top:33%;font:400 2.4cqw/1.4 var(--book-serif);margin:0;letter-spacing:.025em}
+.art-page .cover-plate{position:absolute;left:13.5%;bottom:18%;width:58%;margin:0;box-shadow:0 1px 1px rgb(24 33 20 / 18%)}
 .art-page .cover-plate img{width:100%;height:auto}
-.art-page .cover-foot{position:absolute;bottom:7%;left:13.5%;font:400 1.6cqw/1.4 var(--book-sans);letter-spacing:.13em}
+.art-page .cover-foot{position:absolute;bottom:7%;left:13.5%;font:400 1.9cqw/1.4 var(--book-sans);letter-spacing:.13em}
 .art-page .title-block{position:absolute;top:26%;left:16%;right:12%}
-.art-page .title-block h2{font:400 4.5cqw/1.2 var(--book-serif);letter-spacing:-.01em;margin:0 0 6cqw}
-.art-page .title-block p{font:400 2.1cqw/1.6 var(--book-serif);margin:0}
-.art-page .colophon{position:absolute;left:16%;right:18%;top:52%;font:400 2.2cqw/1.55 var(--book-serif)}
+.art-page .title-block h2{font:400 5.2cqw/1.2 var(--book-serif);letter-spacing:-.01em;margin:0 0 6cqw}
+.art-page .title-block p{font:400 2.5cqw/1.6 var(--book-serif);margin:0}
+.art-page .colophon{position:absolute;left:14%;right:16%;top:50%;font:400 2.5cqw/1.55 var(--book-serif)}
 .art-page .colophon p{margin:0 0 4cqw}
-.art-page .colophon .small-print{font:400 1.7cqw/1.65 var(--book-sans);color:#6f7268}
-.art-page .back-mark{position:absolute;bottom:10%;left:13.5%;font:400 2cqw/1.4 var(--book-serif)}
+.art-page .colophon .small-print{font:400 2cqw/1.65 var(--book-sans);color:#6f7268}
+.art-page .back-mark{position:absolute;bottom:10%;left:13.5%;font:400 2.4cqw/1.4 var(--book-serif)}
 /* The material is a background, so it never changes the photograph's pixels. */
 .book-page.art-page::after{content:none}
 .book-page.art-page.--left::before{background:linear-gradient(to left,rgb(28 30 24 / 12%),rgb(28 30 24 / 3%) 40%,transparent)}
 .book-page.art-page.--right::before{background:linear-gradient(to right,rgb(28 30 24 / 12%),rgb(28 30 24 / 3%) 40%,transparent)}
+
+/*
+ * 小屏（手机）适配：
+ * 书页在手机上只有 360~400px 宽，桌面那套 cqw 字号会缩到 8px 左右，几乎看不清。
+ * 这里用容器查询针对窄页面放大字号、图片，并把文字块边距放宽。
+ */
+@container (max-width: 470px) {
+  .art-page .plate{width:94%;height:90%}
+  .art-page .plate.small{width:74%;height:78%}
+  .art-page .plate.medium{width:90%;height:86%}
+  .art-page .plate.large{width:96%;height:92%}
+  .art-page .plate.portrait{width:88%;height:84%}
+  .art-page .plate.has-caption{gap:3cqw}
+  .art-page .plate.has-caption img{max-height:86%}
+  .art-page .plate-caption{font-size:3.4cqw}
+  .art-page .chapter-block{left:11%;right:9%;top:21%}
+  .art-page .chapter-block .chapter-no{font-size:3cqw;margin-bottom:3.5cqw}
+  .art-page .chapter-block h2{font-size:11cqw;margin-bottom:5cqw}
+  .art-page .chapter-block p{font-size:3.8cqw;line-height:1.75}
+  .art-page .epigraph{left:11%;right:11%;top:29%;font-size:4.6cqw;line-height:1.9}
+  .art-page .epigraph small{font-size:3cqw}
+  .art-page .cover-title{left:10%;right:8%;top:13%;font-size:12.5cqw}
+  .art-page .cover-subtitle{left:10%;top:30%;font-size:3.6cqw}
+  .art-page .cover-plate{left:10%;width:64%}
+  .art-page .cover-foot{left:10%;font-size:2.8cqw}
+  .art-page .title-block{top:22%;left:11%;right:9%}
+  .art-page .title-block h2{font-size:8.5cqw}
+  .art-page .title-block p{font-size:3.8cqw}
+  .art-page .colophon{left:11%;right:11%;top:44%;font-size:3.9cqw}
+  .art-page .colophon .small-print{font-size:3cqw}
+  .art-page .back-mark{font-size:3.6cqw}
+  .art-page .folio{font-size:2.6cqw}
+}
