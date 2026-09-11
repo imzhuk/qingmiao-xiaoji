@@ -1,6 +1,10 @@
 # 编辑器与本地工具（不上传到网站）
 editor/
 _verify.js
+_smoke.js
+
+# 本地笔记与工作数据（不上传到网站）
+.workbuddy/
 
 # 本地备份文件
 content.json.bak
