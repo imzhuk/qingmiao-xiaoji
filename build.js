@@ -12,10 +12,104 @@
 
 const fs = require("fs");
 const path = require("path");
+const { execFileSync } = require("child_process");
 
 const ROOT = __dirname;
 const CONTENT_PATH = path.join(ROOT, "content.json");
 const OUTPUT_PATH = path.join(ROOT, "index.html");
+
+/* ------------------------------------------------------------ 中文字体 */
+
+const FONT_SRC =
+  process.env.CJK_FONT_SRC || path.join(ROOT, "editor", "fonts-src", "LXGWWenKai-Regular.ttf");
+const FONT_OUT = path.join(ROOT, "style", "fonts", "album-cjk.woff2");
+const FONT_CACHE = path.join(ROOT, "style", "fonts", "album-cjk.chars.txt");
+
+/* 除正文里的字，额外保留英文数字与常用标点，避免标点缺字回退到系统字体 */
+const EXTRA_CHARS =
+  " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~" +
+  "、。〈〉《》「」『』【】〔〕〖〗—…‥·～￥“”‘’•※←→↑↓°±×÷　！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝";
+
+const PYTHON_CANDIDATES = [
+  process.env.PYTHON_EXE,
+  path.join(process.env.USERPROFILE || "", ".workbuddy", "binaries", "python", "envs", "default", "Scripts", "python.exe"),
+  "python",
+  "python3",
+].filter(Boolean);
+
+/** 收集 content.json 里出现的所有字符 */
+function collectCharacters(content) {
+  const chars = new Set([...EXTRA_CHARS]);
+  const walk = (value) => {
+    if (typeof value === "string") {
+      for (const ch of value) if (ch.codePointAt(0) > 0x2000) chars.add(ch);
+    } else if (Array.isArray(value)) {
+      value.forEach(walk);
+    } else if (value && typeof value === "object") {
+      Object.values(value).forEach(walk);
+    }
+  };
+  walk(content);
+  return chars;
+}
+
+function readCachedChars() {
+  if (!fs.existsSync(FONT_CACHE)) return new Set();
+  return new Set([...fs.readFileSync(FONT_CACHE, "utf8")]);
+}
+
+function findPython() {
+  for (const candidate of PYTHON_CANDIDATES) {
+    if (candidate === "python" || candidate === "python3") return candidate;
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+/**
+ * 按当前内容裁剪中文字体，生成 style/fonts/album-cjk.woff2。
+ * 内容新增了字就重新裁剪；没有新增则跳过（避免每次保存都跑一遍）。
+ * 缺少 Python/fonttools/字体源时不会报错，只是保留现有字体文件。
+ */
+function refreshFontSubset(content, { force = false } = {}) {
+  const needed = collectCharacters(content);
+  const cached = readCachedChars();
+  const missing = [...needed].filter((ch) => !cached.has(ch));
+  if (!force && !missing.length && fs.existsSync(FONT_OUT)) {
+    return { ok: true, skipped: true, chars: needed.size };
+  }
+  if (!fs.existsSync(FONT_SRC)) {
+    return { ok: false, skipped: true, reason: `找不到字体源文件 ${path.relative(ROOT, FONT_SRC)}，已保留现有字体` };
+  }
+  const python = findPython();
+  if (!python) return { ok: false, skipped: true, reason: "找不到 Python，已保留现有字体" };
+
+  const charFile = path.join(ROOT, "." + "cjk-subset-chars.tmp");
+  fs.writeFileSync(charFile, [...needed].join(""), "utf8");
+  try {
+    execFileSync(
+      python,
+      [
+        "-m",
+        "fontTools.subset",
+        FONT_SRC,
+        `--text-file=${charFile}`,
+        `--output-file=${FONT_OUT}`,
+        "--flavor=woff2",
+        "--no-hinting",
+        "--layout-features=kern,liga,vert,vrt2",
+      ],
+      { stdio: "pipe" }
+    );
+    fs.writeFileSync(FONT_CACHE, [...needed].join(""), "utf8");
+    return { ok: true, chars: needed.size, added: missing.length };
+  } catch (error) {
+    const detail = (error.stderr ? error.stderr.toString() : "") || error.message;
+    return { ok: false, skipped: true, reason: "字体裁剪失败：" + detail.split("\n")[0] };
+  } finally {
+    if (fs.existsSync(charFile)) fs.unlinkSync(charFile);
+  }
+}
 
 const PLATE_SIZES = ["small", "medium", "large", "portrait", "high", "low", "aside"];
 
@@ -140,6 +234,7 @@ function buildHtml(content) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${text(site.pageTitle)}</title>
+  <link rel="preload" href="style/fonts/album-cjk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -167,24 +262,33 @@ function buildHtml(content) {
 `;
 }
 
-/** 生成 index.html，返回 { pageCount, html } */
-function build({ content, contentPath, outputPath } = {}) {
+/** 生成 index.html，返回 { pageCount, html, font } */
+function build({ content, contentPath, outputPath, skipFont = false } = {}) {
   const data = content || loadContent(contentPath || CONTENT_PATH);
   validate(data);
   const html = buildHtml(data);
+  const font = skipFont ? { ok: true, skipped: true } : refreshFontSubset(data);
   if (outputPath !== false) {
     fs.writeFileSync(outputPath || OUTPUT_PATH, html, "utf8");
   }
-  return { pageCount: 3 + (data.pages || []).length + 3, html, content: data };
+  return { pageCount: 3 + (data.pages || []).length + 3, html, content: data, font };
 }
 
-module.exports = { build, buildHtml, loadContent, validate, ROOT, CONTENT_PATH, OUTPUT_PATH };
+module.exports = { build, buildHtml, loadContent, validate, refreshFontSubset, ROOT, CONTENT_PATH, OUTPUT_PATH };
 
 if (require.main === module) {
   try {
     const dry = process.argv.includes("--dry");
-    const result = build({ outputPath: dry ? false : undefined });
+    const forceFont = process.argv.includes("--font");
+    const result = build({ outputPath: dry ? false : undefined, skipFont: dry });
     console.log(dry ? "✅ 数据校验通过" : `✅ 已生成 index.html（共 ${result.pageCount} 页）`);
+    if (result.font && !result.font.skipped) {
+      const size = fs.existsSync(FONT_OUT) ? (fs.statSync(FONT_OUT).size / 1024).toFixed(0) + "KB" : "?";
+      console.log(`✅ 中文字体已裁剪：收录 ${result.font.chars} 个字（${size}）`);
+    } else if (result.font && result.font.reason) {
+      console.log("⚠️  " + result.font.reason);
+    }
+    if (dry && forceFont) console.log(JSON.stringify(refreshFontSubset(loadContent(), { force: true })));
   } catch (error) {
     console.error("❌ " + error.message);
     process.exit(1);
