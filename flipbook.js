@@ -64,6 +64,7 @@ function updateControls() {
 pageFlip.on("flip", (event) => {
   currentPage = Number(event.data);
   updateControls();
+  hydrateImages();
 });
 
 pageFlip.on("changeState", (event) => {
@@ -77,6 +78,79 @@ pageFlip.on("init", (event) => {
 pageFlip.on("changeOrientation", (event) => {
   bookElement.dataset.layout = event.data;
 });
+
+/*
+ * 按页加载图片。
+ *
+ * index.html 里的 <img> 不带 src，两级地址分别挂在 data-thumb（缩略图）和 data-src（原图）上。
+ * 翻页时按距离分配：
+ *   - 当前页往后 3 页 / 往前 1 页：加载原图
+ *   - 再往外几页：先挂上缩略图
+ *   - 更远的页：什么都不下载
+ * 于是打开这本书几乎不产生图片流量，翻到哪儿才下哪儿，而不是一上来就吞掉 37MB。
+ * 缩略图和原图宽高比一致，替换瞬间版式不会跳动。
+ *
+ * 页码语义要注意：双页模式下 currentPage 是「左页」索引，实际可见的是
+ * currentPage 与 currentPage+1 两页，所以往后必须留得比往前多 —— 往后 3 页
+ * 正好覆盖「再翻一次之后能看到的那两页」。
+ */
+const FULL_BEFORE = 1; // 往前几页开始加载原图
+const FULL_AFTER = 3;  // 往后几页开始加载原图
+const THUMB_BEFORE = 3;
+const THUMB_AFTER = 6;
+
+const photoSlots = [];
+pages.forEach((pageEl, index) => {
+  const img = pageEl.querySelector("img[data-src]");
+  if (!img) return;
+  photoSlots.push({
+    index,
+    img,
+    full: img.getAttribute("data-src"),
+    thumb: img.getAttribute("data-thumb"),
+    fullLoading: false,
+    fullDone: false,
+  });
+});
+
+/** 先让缩略图顶上，保证翻过去的一瞬间不是空白 */
+function loadThumbImage(slot) {
+  if (slot.img.getAttribute("src") || !slot.thumb) return;
+  slot.img.src = slot.thumb;
+}
+
+function loadFullImage(slot) {
+  if (slot.fullLoading || slot.fullDone) return;
+  loadThumbImage(slot);
+  slot.fullLoading = true;
+  const loader = new Image();
+  loader.decoding = "async";
+  loader.onload = () => {
+    slot.fullLoading = false;
+    slot.fullDone = true;
+    slot.img.src = slot.full;
+  };
+  loader.onerror = () => {
+    slot.fullLoading = false; // 失败就维持缩略图，下次翻回来再试
+  };
+  loader.src = slot.full;
+}
+
+let hydratedPage = -1;
+function hydrateImages(force = false) {
+  if (!force && hydratedPage === currentPage) return;
+  hydratedPage = currentPage;
+  const wantFull = [];
+  for (const slot of photoSlots) {
+    const offset = slot.index - currentPage;
+    if (offset >= -FULL_BEFORE && offset <= FULL_AFTER) wantFull.push(slot);
+    else if (offset >= -THUMB_BEFORE && offset <= THUMB_AFTER) loadThumbImage(slot);
+  }
+  // 近的页先发请求，别让远处的图把带宽抢走
+  wantFull.sort((a, b) => Math.abs(a.index - currentPage) - Math.abs(b.index - currentPage));
+  for (const slot of wantFull) loadFullImage(slot);
+}
+hydrateImages(true);
 
 pageFlip.loadFromHTML(pages);
 
@@ -187,4 +261,11 @@ window.__qingmiaoBook = {
     const ui = pageFlip.getUI();
     return ui ? ui.swipeTimeout : null;
   },
+  // 每张图当前挂的是缩略图还是原图，便于排查与自测
+  imageState: () =>
+    photoSlots.map((slot) => ({
+      page: slot.index,
+      showing: slot.img.getAttribute("src") ? slot.img.getAttribute("src").split("/").pop() : null,
+      isFull: slot.fullDone,
+    })),
 };

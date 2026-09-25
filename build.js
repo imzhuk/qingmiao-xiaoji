@@ -17,6 +17,7 @@ const { execFileSync } = require("child_process");
 const ROOT = __dirname;
 const CONTENT_PATH = path.join(ROOT, "content.json");
 const OUTPUT_PATH = path.join(ROOT, "index.html");
+const MANIFEST_PATH = path.join(ROOT, "assets", "photos", "manifest.json");
 
 /* ------------------------------------------------------------ 中文字体 */
 
@@ -126,6 +127,18 @@ function text(value) {
   return escapeHtml(value).replace(/\r?\n/g, "<br>");
 }
 
+/**
+ * 读取图片清单（每张图的宽高 + 缩略图路径），由 tools/optimize-images.py 生成。
+ * 文件不存在时返回空对象，页面会退化成"直接加载原图"，功能不受影响。
+ */
+function loadManifest() {
+  try {
+    return JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
 function loadContent(contentPath = CONTENT_PATH) {
   const raw = fs.readFileSync(contentPath, "utf8");
   const data = JSON.parse(raw);
@@ -182,7 +195,7 @@ function epigraphPage(content, index) {
         </article>`;
 }
 
-function bodyPage(page, index) {
+function bodyPage(page, index, manifest) {
   const side = sideOf(index);
   if (page.type === "chapter") {
     return `<article class="book-page art-page paper ${side}" aria-label="Page ${index}">
@@ -191,8 +204,31 @@ function bodyPage(page, index) {
   }
   const plateClass = ["plate", page.size, "has-caption"].filter(Boolean).join(" ");
   const alt = page.alt ? ` alt="${escapeHtml(page.alt)}"` : ' alt=""';
+
+  /*
+   * 图片不直接给 src，而是把两级地址都挂在 data-* 上，交给 flipbook.js 按需分配：
+   *  - data-thumb：小尺寸缩略图（几十 KB），翻到附近就先显示它
+   *  - data-src  ：原图，等页真的翻到了才下载
+   *  - width/height 取自 manifest.json，让浏览器在图片到达前就确定版式，
+   *    否则 <img> 撑开的瞬间会把图注挤得到处跳
+   * 翻书本身就完全依赖 JS，所以不写 src 不会带来额外的降级风险。
+   * 找不到清单信息时退回"直接加载原图"，与旧行为一致。
+   */
+  const stem = path.basename(page.src).replace(/\.[^.]+$/, "");
+  const info = manifest[stem];
+  /*
+   * 以清单为准而不是以 content.json 的 src 为准：
+   * 转码时若判定"原文件已经足够小"（某些 JPG 转 WebP 反而更大），清单里的 src 会指回原文件。
+   * 跟着清单走，就不会引用到根本没生成的 .webp。
+   */
+  const fullSrc = (info && info.src) || page.src;
+  const thumb = page.thumb || (info && info.thumb);
+  const size = info ? ` width="${info.w}" height="${info.h}"` : "";
+  const img = thumb
+    ? `<img data-thumb="${escapeHtml(thumb)}" data-src="${escapeHtml(fullSrc)}"${size}${alt}>`
+    : `<img src="${escapeHtml(fullSrc)}"${size}${alt}>`;
   return `<article class="book-page art-page paper ${side}" aria-label="Page ${index}">
-          <figure class="${plateClass}"><img src="${escapeHtml(page.src)}"${alt}><figcaption class="plate-caption">${text(page.caption)}</figcaption></figure>
+          <figure class="${plateClass}">${img}<figcaption class="plate-caption">${text(page.caption)}</figcaption></figure>
         </article>`;
 }
 
@@ -210,7 +246,7 @@ function backCoverPage(content, index) {
         </article>`;
 }
 
-function buildHtml(content) {
+function buildHtml(content, manifest = loadManifest()) {
   const site = content.site || {};
   const blocks = [];
   const pages = content.pages || [];
@@ -220,7 +256,7 @@ function buildHtml(content) {
   blocks.push(endpaperPage(index++));            // 环衬
   blocks.push(epigraphPage(content, index++));   // 题记
   for (const page of pages) {
-    blocks.push(bodyPage(page, index++));        // 章节页 / 图片页
+    blocks.push(bodyPage(page, index++, manifest)); // 章节页 / 图片页
   }
   blocks.push(colophonPage(content, index++));   // 版权页
   blocks.push(endpaperPage(index++));            // 环衬
